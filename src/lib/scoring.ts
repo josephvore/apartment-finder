@@ -2,7 +2,7 @@ import { Apartment, ScoreWeights, Scores } from "./types";
 
 export function weightedScore(
   scores: Scores,
-  weights: ScoreWeights
+  weights: ScoreWeights,
 ): number | null {
   let totalWeight = 0;
   let weightedSum = 0;
@@ -22,7 +22,7 @@ export function weightedScore(
 export function totalMonthlyCost(apt: Apartment): number {
   const rent = apt.rent ?? 0;
   const parking = apt.parking.cost ?? 0;
-  const petRent = apt.petPolicy.allowed ? apt.fees.petRent ?? 0 : 0;
+  const petRent = apt.petPolicy.allowed ? (apt.fees.petRent ?? 0) : 0;
   const utilities = apt.utilities.estimatedMonthly ?? 0;
   return rent + parking + petRent + utilities;
 }
@@ -44,14 +44,14 @@ export function costPerSqFt(apt: Apartment): number | null {
   return Math.round((apt.rent / apt.squareFeet) * 100) / 100;
 }
 
-export interface RankedApartment {
+interface RankedApartment {
   apt: Apartment;
   score: number | null;
 }
 
 export function rankByScore(
   apartments: Apartment[],
-  weights: ScoreWeights
+  weights: ScoreWeights,
 ): RankedApartment[] {
   return apartments
     .map((apt) => ({ apt, score: weightedScore(apt.scores, weights) }))
@@ -65,7 +65,7 @@ export function rankByScore(
 
 export function bestBy(
   apartments: Apartment[],
-  field: keyof Scores
+  field: keyof Scores,
 ): Apartment | null {
   let best: Apartment | null = null;
   let bestVal = -Infinity;

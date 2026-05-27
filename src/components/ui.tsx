@@ -5,17 +5,13 @@ import { ApartmentStatus } from "@/lib/types";
 
 export function StatusBadge({ status }: { status: ApartmentStatus }) {
   const colors: Record<ApartmentStatus, string> = {
-    Interested: "bg-slate-100 text-slate-700 dark:bg-slate-700 dark:text-slate-100",
-    "Strong contender":
-      "bg-emerald-100 text-emerald-800 dark:bg-emerald-900/40 dark:text-emerald-200",
-    "Needs research":
-      "bg-amber-100 text-amber-800 dark:bg-amber-900/40 dark:text-amber-200",
-    "Scheduled tour":
-      "bg-blue-100 text-blue-800 dark:bg-blue-900/40 dark:text-blue-200",
-    Applied:
-      "bg-purple-100 text-purple-800 dark:bg-purple-900/40 dark:text-purple-200",
-    Rejected: "bg-rose-100 text-rose-700 dark:bg-rose-900/40 dark:text-rose-200",
-    Archived: "bg-slate-100 text-slate-500 dark:bg-slate-800 dark:text-slate-400",
+    Interested: "bg-slate-100 text-slate-700",
+    "Strong contender": "bg-emerald-100 text-emerald-800",
+    "Needs research": "bg-amber-100 text-amber-800",
+    "Scheduled tour": "bg-blue-100 text-blue-800",
+    Applied: "bg-purple-100 text-purple-800",
+    Rejected: "bg-rose-100 text-rose-700",
+    Archived: "bg-slate-100 text-slate-500",
   };
   return (
     <span
@@ -37,12 +33,12 @@ export function ScorePill({
     size === "lg"
       ? "w-12 h-12 text-base"
       : size === "sm"
-      ? "w-9 h-9 text-xs"
-      : "w-10 h-10 text-sm";
+        ? "w-9 h-9 text-xs"
+        : "w-10 h-10 text-sm";
   if (score === null) {
     return (
       <span
-        className={`inline-flex items-center justify-center rounded-full bg-slate-100 dark:bg-slate-800 text-slate-400 ${dim}`}
+        className={`inline-flex items-center justify-center rounded-full bg-slate-100 text-slate-400 ${dim}`}
       >
         —
       </span>
@@ -50,12 +46,12 @@ export function ScorePill({
   }
   const color =
     score >= 8
-      ? "bg-emerald-500"
+      ? "bg-emerald-600"
       : score >= 6.5
-      ? "bg-blue-500"
-      : score >= 5
-      ? "bg-amber-500"
-      : "bg-rose-500";
+        ? "bg-blue-600"
+        : score >= 5
+          ? "bg-amber-600"
+          : "bg-rose-600";
   return (
     <span
       className={`inline-flex items-center justify-center rounded-full text-white font-semibold ${color} ${dim}`}
@@ -67,7 +63,7 @@ export function ScorePill({
 
 export function RankBadge({ rank }: { rank: number }) {
   return (
-    <span className="inline-flex items-center justify-center w-7 h-7 rounded-full bg-slate-900 dark:bg-slate-100 text-white dark:text-slate-900 text-xs font-bold">
+    <span className="inline-flex items-center justify-center w-7 h-7 rounded-full bg-slate-900 text-white text-xs font-bold">
       #{rank}
     </span>
   );
@@ -106,7 +102,7 @@ export function SectionHeading({
 
 export function Tag({ children }: { children: React.ReactNode }) {
   return (
-    <span className="inline-flex items-center px-2 py-0.5 rounded text-xs bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300">
+    <span className="inline-flex items-center px-2 py-0.5 rounded text-xs bg-slate-100 text-slate-700">
       {children}
     </span>
   );
@@ -115,7 +111,7 @@ export function Tag({ children }: { children: React.ReactNode }) {
 export function RedFlagBadge({ count }: { count: number }) {
   if (count === 0) return null;
   return (
-    <span className="inline-flex items-center px-2 py-0.5 rounded text-xs bg-rose-100 dark:bg-rose-900/40 text-rose-700 dark:text-rose-200 font-medium">
+    <span className="inline-flex items-center px-2 py-0.5 rounded text-xs bg-rose-100 text-rose-700 font-medium">
       ⚠ {count} red flag{count > 1 ? "s" : ""}
     </span>
   );
@@ -152,18 +148,18 @@ export function Accordion({
     alwaysOpenAt === "never"
       ? ""
       : alwaysOpenAt === "sm"
-      ? "sm:!grid-rows-[1fr]"
-      : alwaysOpenAt === "md"
-      ? "md:!grid-rows-[1fr]"
-      : "lg:!grid-rows-[1fr]";
+        ? "sm:!grid-rows-[1fr]"
+        : alwaysOpenAt === "md"
+          ? "md:!grid-rows-[1fr]"
+          : "lg:!grid-rows-[1fr]";
   const forceHideToggle =
     alwaysOpenAt === "never"
       ? ""
       : alwaysOpenAt === "sm"
-      ? "sm:hidden"
-      : alwaysOpenAt === "md"
-      ? "md:hidden"
-      : "lg:hidden";
+        ? "sm:hidden"
+        : alwaysOpenAt === "md"
+          ? "md:hidden"
+          : "lg:hidden";
   return (
     <div className="border-b border-[var(--border)] last:border-b-0">
       <button
@@ -251,7 +247,7 @@ export function Sheet({
         style={{ paddingBottom: "var(--safe-bottom)" }}
       >
         <div className="flex justify-center pt-2 shrink-0">
-          <span className="w-10 h-1.5 rounded-full bg-slate-300 dark:bg-slate-700" />
+          <span className="w-10 h-1.5 rounded-full bg-slate-300" />
         </div>
         {title && (
           <div className="px-4 pt-2 pb-1 flex items-center justify-between shrink-0">

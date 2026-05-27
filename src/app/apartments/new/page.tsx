@@ -8,7 +8,7 @@ import { ApartmentForm } from "@/components/ApartmentForm";
 export default function NewApartmentPage() {
   const initial = useMemo(
     () => ({ ...emptyApartment(), id: uuid(), rank: 999 }),
-    []
+    [],
   );
   return <ApartmentForm initial={initial} mode="new" />;
 }

@@ -344,12 +344,12 @@ export const SEED_APARTMENTS: Apartment[] = [
     website: "https://www.crossingat9th.com/",
     rent: 1825,
     rentRangeLow: 1825,
-    rentRangeHigh: 2315,
+    rentRangeHigh: 2265,
     unitType: "2BR/2BA",
     squareFeet: 880,
     availability:
-      "22 units listed (May 2026); broad 2BR availability $1,825–$2,315 across 7+ floor plans.",
-    leaseTerms: "Standard terms; up to 12 WEEKS FREE current special.",
+      "2BR availability $1,825–$2,265 across 7+ floor plans (verify current specials with leasing office).",
+    leaseTerms: "Standard terms; check leasing office for active promos.",
     fees: {
       application: null,
       admin: null,
@@ -403,7 +403,6 @@ export const SEED_APARTMENTS: Apartment[] = [
     pros: [
       "New construction (2025) with modern finishes throughout",
       "Dog park + pet wash on site — strongest dog setup at this price",
-      "Up to 12 weeks free promo brings 2BR effective rate well under $2,400",
       "Rooftop lounge + pool",
     ],
     cons: [
@@ -421,7 +420,7 @@ export const SEED_APARTMENTS: Apartment[] = [
     dealbreakers: [],
     niceToHaves: ["Smart locks", "Co-working space"],
     followUpQuestions: [
-      "What's the effective 2BR rate after applying 12 weeks free?",
+      "Are any concession specials active right now?",
       "What is the application fee + security deposit policy?",
       "What's parking pricing? Is it included for 2BRs?",
       "Has the dog park been well-maintained since opening?",
@@ -484,9 +483,7 @@ export const SEED_APARTMENTS: Apartment[] = [
         "new construction quality",
         "dog park + pet amenities",
       ],
-      commonComplaints: [
-        "limited feedback yet (newly opened)",
-      ],
+      commonComplaints: ["limited feedback yet (newly opened)"],
     },
     tags: ["dog-park", "value", "new-2025", "pool"],
     confidence: "medium",
@@ -511,7 +508,8 @@ export const SEED_APARTMENTS: Apartment[] = [
     rentRangeHigh: 2040,
     unitType: "2BR/2BA",
     squareFeet: 996,
-    availability: "39 units available (May 2026). 2BR 996–1,344 sqft $1,869–$2,040.",
+    availability:
+      "Limited 2BR units 996–1,344 sqft $1,869–$2,040 (re-check ApartmentList for current count).",
     leaseTerms:
       "12-month standard; current promo 'Up to 8 Weeks Free on Your New Home' (base rent, restrictions apply).",
     fees: {
@@ -595,7 +593,8 @@ export const SEED_APARTMENTS: Apartment[] = [
         url: "https://www.gateway505.com/",
         type: "official",
         dateAccessed: today,
-        notes: "Confirmed rent ranges, $45 app, $500 deposit, $75/mo pet rent, 70lb weight limit",
+        notes:
+          "Confirmed rent ranges, $45 app, $500 deposit, $75/mo pet rent, 70lb weight limit",
         confidence: "high",
       },
       {
@@ -603,7 +602,7 @@ export const SEED_APARTMENTS: Apartment[] = [
         url: "https://www.apartmentlist.com/ut/salt-lake-city/gateway-505",
         type: "listing",
         dateAccessed: today,
-        notes: "39 units, confirms NO parking",
+        notes: "confirms NO parking; inventory count fluctuates",
         confidence: "high",
       },
       {
@@ -1217,11 +1216,7 @@ export const SEED_APARTMENTS: Apartment[] = [
       "Smoking smell complaints despite no-smoke policy",
     ],
     redFlags: ["Smoking smell in common areas per reviews"],
-    unknowns: [
-      "Security deposit",
-      "Parking monthly cost",
-      "Pet weight limit",
-    ],
+    unknowns: ["Security deposit", "Parking monthly cost", "Pet weight limit"],
     dealbreakers: [],
     niceToHaves: ["EV charging", "Direct TRAX"],
     followUpQuestions: [

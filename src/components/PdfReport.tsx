@@ -235,8 +235,7 @@ function ApartmentProfile({
       )}
       {apt.reviewSummary.rating !== null && (
         <Text style={{ marginTop: 3 }}>
-          <Text style={styles.bold}>Reviews:</Text>{" "}
-          {apt.reviewSummary.rating}/5
+          <Text style={styles.bold}>Reviews:</Text> {apt.reviewSummary.rating}/5
           {apt.reviewSummary.reviewCount
             ? ` (${apt.reviewSummary.reviewCount} reviews)`
             : ""}
@@ -275,7 +274,7 @@ export function PdfReport({
   const am = bestBy(apartments, "amenities");
   const risk = highestRisk(apartments);
   const cheapest = [...apartments].sort(
-    (a, b) => totalMonthlyCost(a) - totalMonthlyCost(b)
+    (a, b) => totalMonthlyCost(a) - totalMonthlyCost(b),
   )[0];
 
   const headers = [
@@ -426,9 +425,13 @@ export function PdfReport({
             <Text>
               <Text style={styles.bold}>Why this rank:</Text> Driven by{" "}
               {(
-                Object.keys(SCORE_CATEGORY_LABELS) as (keyof typeof SCORE_CATEGORY_LABELS)[]
+                Object.keys(
+                  SCORE_CATEGORY_LABELS,
+                ) as (keyof typeof SCORE_CATEGORY_LABELS)[]
               )
-                .map((k) => `${SCORE_CATEGORY_LABELS[k]} ${apt.scores[k] ?? "—"}`)
+                .map(
+                  (k) => `${SCORE_CATEGORY_LABELS[k]} ${apt.scores[k] ?? "—"}`,
+                )
                 .join(", ")}
               .
             </Text>
@@ -438,7 +441,8 @@ export function PdfReport({
         <Text style={styles.h2}>Research notes</Text>
         {sorted.map((a) => {
           const items: string[] = [];
-          if (a.unknowns.length) items.push(`Unknowns: ${a.unknowns.join("; ")}`);
+          if (a.unknowns.length)
+            items.push(`Unknowns: ${a.unknowns.join("; ")}`);
           if (a.missingData.length)
             items.push(`Missing: ${a.missingData.join("; ")}`);
           if (a.confidence !== "high")

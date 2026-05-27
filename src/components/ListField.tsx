@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useId, useState } from "react";
 
 export function ListField({
   label,
@@ -16,6 +16,7 @@ export function ListField({
   colorClass?: string;
 }) {
   const [draft, setDraft] = useState("");
+  const inputId = useId();
   const add = () => {
     const v = draft.trim();
     if (!v) return;
@@ -24,7 +25,10 @@ export function ListField({
   };
   return (
     <div className="flex flex-col gap-2">
-      <label className="text-xs text-[var(--muted)] uppercase tracking-wider">
+      <label
+        htmlFor={inputId}
+        className="text-xs text-[var(--muted)] uppercase tracking-wider"
+      >
         {label}
       </label>
       <div className="flex flex-wrap gap-1.5">
@@ -38,6 +42,7 @@ export function ListField({
               onClick={() => onChange(values.filter((_, j) => j !== i))}
               className="text-current opacity-60 hover:opacity-100"
               type="button"
+              aria-label={`Remove ${v}`}
             >
               ×
             </button>
@@ -46,6 +51,7 @@ export function ListField({
       </div>
       <div className="flex gap-2">
         <input
+          id={inputId}
           value={draft}
           onChange={(e) => setDraft(e.target.value)}
           onKeyDown={(e) => {
@@ -60,7 +66,7 @@ export function ListField({
         <button
           type="button"
           onClick={add}
-          className="px-3 py-1 rounded bg-slate-900 text-white text-sm whitespace-nowrap"
+          className="px-3 py-1 rounded bg-slate-900 text-white text-sm whitespace-nowrap min-h-[44px]"
         >
           Add
         </button>

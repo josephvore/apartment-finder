@@ -38,7 +38,13 @@ export interface Source {
 
 export interface Comment {
   id: string;
-  category: "general" | "tour" | "question" | "concern" | "decision" | "followup";
+  category:
+    | "general"
+    | "tour"
+    | "question"
+    | "concern"
+    | "decision"
+    | "followup";
   body: string;
   createdAt: string;
 }

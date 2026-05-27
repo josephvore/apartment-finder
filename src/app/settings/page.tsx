@@ -33,12 +33,11 @@ export default function SettingsPage() {
           right={
             <span
               className={`text-xs ${
-                total === 100
-                  ? "text-emerald-700 dark:text-emerald-300"
-                  : "text-amber-700 dark:text-amber-300"
+                total === 100 ? "text-emerald-700" : "text-amber-700"
               }`}
             >
-              total: {total}{" "}
+              total: {total}
+              {""}
               {total !== 100 && "(normalized when applied)"}
             </span>
           }
@@ -73,7 +72,7 @@ export default function SettingsPage() {
         <div className="flex flex-col sm:flex-row gap-2">
           <button
             onClick={() => updateWeights(weights)}
-            className="min-h-[44px] px-3 rounded bg-emerald-600 text-white text-sm font-medium hover:bg-emerald-700"
+            className="min-h-[44px] px-3 rounded bg-emerald-700 text-white text-sm font-medium hover:bg-emerald-800"
           >
             Apply weights
           </button>
@@ -92,9 +91,7 @@ export default function SettingsPage() {
       <Card className="p-4 sm:p-5 space-y-3">
         <SectionHeading>Data backup &amp; restore</SectionHeading>
         <p className="text-xs text-[var(--muted)]">
-          Persistence: browser localStorage (key{" "}
-          <code className="break-all">apartment-finder:v1</code>). Use
-          export/import to back up or sync between devices.
+          Use export/import to back up or sync between devices.
         </p>
         <div className="flex flex-col sm:flex-row flex-wrap gap-2">
           <button
@@ -110,7 +107,7 @@ export default function SettingsPage() {
               a.click();
               URL.revokeObjectURL(url);
             }}
-            className="min-h-[44px] px-3 rounded bg-slate-900 dark:bg-slate-100 text-white dark:text-slate-900 text-sm font-medium"
+            className="min-h-[44px] px-3 rounded bg-slate-900 text-white text-sm font-medium"
           >
             Download backup JSON
           </button>
@@ -118,21 +115,25 @@ export default function SettingsPage() {
             onClick={() => {
               if (
                 confirm(
-                  "Reset all data to the seeded list of 10 SLC apartments? Your edits will be lost."
+                  "Reset all data to the seeded list of 10 SLC apartments? Your edits will be lost.",
                 )
               )
                 resetToSeed();
             }}
-            className="min-h-[44px] px-3 rounded border border-rose-300 dark:border-rose-700 text-rose-700 dark:text-rose-300 text-sm"
+            className="min-h-[44px] px-3 rounded border border-rose-300 text-rose-700 text-sm"
           >
             Reset to seeded data
           </button>
         </div>
         <div className="space-y-2">
-          <label className="text-xs text-[var(--muted)] uppercase">
+          <label
+            htmlFor="import-json"
+            className="text-xs text-[var(--muted)] uppercase"
+          >
             Import JSON
           </label>
           <textarea
+            id="import-json"
             rows={5}
             placeholder="Paste exported JSON here…"
             value={importText}
@@ -143,11 +144,11 @@ export default function SettingsPage() {
               onClick={() => {
                 const res = importJSON(importText);
                 setImportStatus(
-                  res.ok ? "Imported successfully." : `Failed: ${res.error}`
+                  res.ok ? "Imported successfully." : `Failed: ${res.error}`,
                 );
                 if (res.ok) setImportText("");
               }}
-              className="min-h-[44px] px-3 rounded bg-slate-900 dark:bg-slate-100 text-white dark:text-slate-900 text-sm font-medium"
+              className="min-h-[44px] px-3 rounded bg-slate-900 text-white text-sm font-medium"
             >
               Import
             </button>
@@ -155,8 +156,8 @@ export default function SettingsPage() {
               <span
                 className={`text-xs ${
                   importStatus.startsWith("Imported")
-                    ? "text-emerald-700 dark:text-emerald-300"
-                    : "text-rose-700 dark:text-rose-300"
+                    ? "text-emerald-700"
+                    : "text-rose-700"
                 }`}
               >
                 {importStatus}

@@ -21,7 +21,9 @@ import { Apartment, SCORE_CATEGORY_LABELS } from "@/lib/types";
 
 export default function ComparePage() {
   return (
-    <Suspense fallback={<div className="text-sm text-[var(--muted)]">Loading…</div>}>
+    <Suspense
+      fallback={<div className="text-sm text-[var(--muted)]">Loading…</div>}
+    >
       <CompareInner />
     </Suspense>
   );
@@ -32,7 +34,7 @@ function CompareInner() {
   const params = useSearchParams();
   const sorted = useMemo(
     () => [...state.apartments].sort((a, b) => a.rank - b.rank),
-    [state.apartments]
+    [state.apartments],
   );
   const [selected, setSelected] = useState<string[]>([]);
 
@@ -41,7 +43,9 @@ function CompareInner() {
     if (selected.length > 0) return;
     const raw = params.get("ids");
     if (raw) {
-      const ids = raw.split(",").filter((id) => sorted.some((a) => a.id === id));
+      const ids = raw
+        .split(",")
+        .filter((id) => sorted.some((a) => a.id === id));
       if (ids.length > 0) {
         setSelected(ids);
         return;
@@ -55,7 +59,7 @@ function CompareInner() {
 
   const toggle = (id: string) => {
     setSelected((s) =>
-      s.includes(id) ? s.filter((x) => x !== id) : [...s, id]
+      s.includes(id) ? s.filter((x) => x !== id) : [...s, id],
     );
   };
 
@@ -115,7 +119,7 @@ function CompareInner() {
       label: "Pet amenities",
       render: (a) =>
         a.petPolicy.petAmenities.length
-          ? a.petPolicy.petAmenities.join(", ")
+          ? a.petPolicy.petAmenities.join(",")
           : "—",
     },
     {
@@ -136,7 +140,7 @@ function CompareInner() {
     {
       label: "Pros",
       render: (a) => (
-        <ul className="list-disc pl-4 text-xs space-y-0.5 text-emerald-800 dark:text-emerald-200">
+        <ul className="list-disc pl-4 text-xs space-y-0.5 text-emerald-800">
           {a.pros.slice(0, 4).map((p, i) => (
             <li key={i}>{p}</li>
           ))}
@@ -146,7 +150,7 @@ function CompareInner() {
     {
       label: "Cons",
       render: (a) => (
-        <ul className="list-disc pl-4 text-xs space-y-0.5 text-rose-800 dark:text-rose-200">
+        <ul className="list-disc pl-4 text-xs space-y-0.5 text-rose-800">
           {a.cons.slice(0, 4).map((p, i) => (
             <li key={i}>{p}</li>
           ))}
@@ -157,7 +161,7 @@ function CompareInner() {
       label: "Red flags",
       render: (a) =>
         a.redFlags.length ? (
-          <ul className="list-disc pl-4 text-xs space-y-0.5 text-red-800 dark:text-red-200">
+          <ul className="list-disc pl-4 text-xs space-y-0.5 text-red-800">
             {a.redFlags.map((p, i) => (
               <li key={i}>{p}</li>
             ))}
@@ -197,19 +201,24 @@ function CompareInner() {
           Select apartments
         </div>
         <div className="flex flex-wrap gap-2">
-          {sorted.map((a) => (
-            <button
-              key={a.id}
-              onClick={() => toggle(a.id)}
-              className={`min-h-[40px] px-3 rounded-full text-sm border ${
-                selected.includes(a.id)
-                  ? "bg-slate-900 dark:bg-slate-100 text-white dark:text-slate-900 border-slate-900 dark:border-slate-100"
-                  : "bg-[var(--card)] text-[var(--foreground)] border-[var(--border)]"
-              }`}
-            >
-              #{a.rank} {a.name}
-            </button>
-          ))}
+          {sorted.map((a) => {
+            const isSelected = selected.includes(a.id);
+            return (
+              <button
+                key={a.id}
+                type="button"
+                onClick={() => toggle(a.id)}
+                aria-pressed={isSelected}
+                className={`min-h-[40px] px-3 rounded-full text-sm border ${
+                  isSelected
+                    ? "bg-slate-900 text-white border-slate-900"
+                    : "bg-[var(--card)] text-[var(--foreground)] border-[var(--border)]"
+                }`}
+              >
+                #{a.rank} {a.name}
+              </button>
+            );
+          })}
         </div>
       </Card>
 
@@ -219,7 +228,12 @@ function CompareInner() {
         </Card>
       ) : (
         <Card className="overflow-hidden">
-          <div className="overflow-x-auto">
+          <div
+            className="overflow-x-auto"
+            role="region"
+            aria-label="Apartment comparison table"
+            tabIndex={0}
+          >
             <table className="text-sm border-collapse">
               <colgroup>
                 <col className="w-[108px] sm:w-[180px]" />
@@ -229,7 +243,7 @@ function CompareInner() {
               </colgroup>
               <thead>
                 <tr>
-                  <th className="sticky left-0 z-20 bg-slate-50 dark:bg-slate-800/80 backdrop-blur p-3 text-left text-xs text-[var(--muted)] uppercase tracking-wider font-medium border-b border-[var(--border)]">
+                  <th className="sticky left-0 z-20 bg-slate-50 backdrop-blur p-3 text-left text-xs text-[var(--muted)] uppercase tracking-wider font-medium border-b border-[var(--border)]">
                     Attribute
                   </th>
                   {chosen.map((a) => (
@@ -237,7 +251,9 @@ function CompareInner() {
                       key={a.id}
                       className="p-3 text-left bg-[var(--card)] border-b border-[var(--border)] border-l border-[var(--border)]"
                     >
-                      <div className="font-semibold leading-tight">{a.name}</div>
+                      <div className="font-semibold leading-tight">
+                        {a.name}
+                      </div>
                       <div className="text-xs text-[var(--muted)] font-normal">
                         #{a.rank} • {a.neighborhood}
                       </div>
@@ -249,15 +265,9 @@ function CompareInner() {
                 {allRows.map((row, ri) => (
                   <tr
                     key={row.label}
-                    className={
-                      ri % 2 === 0
-                        ? ""
-                        : "bg-slate-50/40 dark:bg-slate-800/30"
-                    }
+                    className={ri % 2 === 0 ? "" : "bg-slate-50/40"}
                   >
-                    <th
-                      className="sticky left-0 z-10 bg-[var(--card)] p-3 text-left text-xs text-[var(--muted)] uppercase tracking-wider font-medium align-top border-r border-[var(--border)]"
-                    >
+                    <th className="sticky left-0 z-10 bg-[var(--card)] p-3 text-left text-xs text-[var(--muted)] uppercase tracking-wider font-medium align-top border-r border-[var(--border)]">
                       {row.label}
                     </th>
                     {chosen.map((a) => (
@@ -273,11 +283,6 @@ function CompareInner() {
               </tbody>
             </table>
           </div>
-          {chosen.length > 1 && (
-            <div className="md:hidden text-center text-xs text-[var(--muted)] py-2 border-t border-[var(--border)]">
-              ← swipe horizontally to compare →
-            </div>
-          )}
         </Card>
       )}
     </div>

@@ -18,21 +18,6 @@
   --bottom-nav-h: 64px;
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0b1220;
-    --foreground: #e2e8f0;
-    --card: #131c2e;
-    --border: #1f2a40;
-    --muted: #94a3b8;
-    --accent: #60a5fa;
-    --accent-foreground: #0b1220;
-    --success: #34d399;
-    --warning: #fbbf24;
-    --danger: #f87171;
-  }
-}
-
 @theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
@@ -126,9 +111,6 @@ input[type="number"] {
 .safe-top {
   padding-top: var(--safe-top);
 }
-.safe-bottom {
-  padding-bottom: var(--safe-bottom);
-}
 .safe-x {
   padding-left: var(--safe-left);
   padding-right: var(--safe-right);
@@ -145,18 +127,6 @@ input[type="number"] {
   body {
     padding-bottom: 0 !important;
   }
-}
-
-/* Subtle scroll snap helper for compare carousel */
-.snap-x-mandatory {
-  scroll-snap-type: x mandatory;
-  scrollbar-width: none;
-}
-.snap-x-mandatory::-webkit-scrollbar {
-  display: none;
-}
-.snap-start {
-  scroll-snap-align: start;
 }
 
 /* Smooth touch behaviour */

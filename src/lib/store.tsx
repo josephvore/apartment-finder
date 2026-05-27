@@ -35,7 +35,7 @@ interface StoreContextValue {
   addComment: (
     aptId: string,
     body: string,
-    category: Comment["category"]
+    category: Comment["category"],
   ) => void;
   removeComment: (aptId: string, commentId: string) => void;
   addSource: (aptId: string, src: Omit<Source, "id">) => void;
@@ -166,11 +166,11 @@ export function StoreProvider({ children }: { children: React.ReactNode }) {
       setState((s) => ({
         ...s,
         apartments: s.apartments.map((a) =>
-          a.id === aptId ? { ...a, comments: [...a.comments, comment] } : a
+          a.id === aptId ? { ...a, comments: [...a.comments, comment] } : a,
         ),
       }));
     },
-    []
+    [],
   );
 
   const removeComment = useCallback((aptId: string, commentId: string) => {
@@ -179,7 +179,7 @@ export function StoreProvider({ children }: { children: React.ReactNode }) {
       apartments: s.apartments.map((a) =>
         a.id === aptId
           ? { ...a, comments: a.comments.filter((c) => c.id !== commentId) }
-          : a
+          : a,
       ),
     }));
   }, []);
@@ -189,7 +189,7 @@ export function StoreProvider({ children }: { children: React.ReactNode }) {
     setState((s) => ({
       ...s,
       apartments: s.apartments.map((a) =>
-        a.id === aptId ? { ...a, sources: [...a.sources, newSrc] } : a
+        a.id === aptId ? { ...a, sources: [...a.sources, newSrc] } : a,
       ),
     }));
   }, []);
@@ -200,7 +200,7 @@ export function StoreProvider({ children }: { children: React.ReactNode }) {
       apartments: s.apartments.map((a) =>
         a.id === aptId
           ? { ...a, sources: a.sources.filter((s2) => s2.id !== srcId) }
-          : a
+          : a,
       ),
     }));
   }, []);
@@ -232,7 +232,7 @@ export function StoreProvider({ children }: { children: React.ReactNode }) {
         };
       }
     },
-    []
+    [],
   );
 
   const value = useMemo<StoreContextValue>(
@@ -269,7 +269,7 @@ export function StoreProvider({ children }: { children: React.ReactNode }) {
       resetToSeed,
       exportJSON,
       importJSON,
-    ]
+    ],
   );
 
   return (

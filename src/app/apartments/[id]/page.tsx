@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { use, useState } from "react";
+import { use, useEffect, useState } from "react";
 import { useStore } from "@/lib/store";
 import {
   Accordion,
@@ -31,14 +31,8 @@ export default function ApartmentDetailPage({
   params: Promise<{ id: string }>;
 }) {
   const { id } = use(params);
-  const {
-    state,
-    addComment,
-    removeComment,
-    addSource,
-    removeSource,
-    upsertApartment,
-  } = useStore();
+  const { state, addComment, removeComment, addSource, removeSource } =
+    useStore();
   const apt = state.apartments.find((a) => a.id === id);
   const [draft, setDraft] = useState("");
   const [draftCat, setDraftCat] = useState<Comment["category"]>("general");
@@ -74,36 +68,32 @@ export default function ApartmentDetailPage({
               </h1>
             </div>
             <p className="text-sm text-[var(--muted)]">{apt.neighborhood}</p>
-            <p className="text-xs text-[var(--muted)] break-words">{apt.address}</p>
+            <p className="text-xs text-[var(--muted)] break-words">
+              {apt.address}
+            </p>
           </div>
           <ScorePill score={score} size="lg" />
         </div>
         <div className="flex flex-wrap gap-1.5">
           <StatusBadge status={apt.status} />
           <RedFlagBadge count={apt.redFlags.length} />
-          {apt.tags.map((t) => (
+          {apt.tags.slice(0, 3).map((t) => (
             <Tag key={t}>{t}</Tag>
           ))}
-          <span
-            className={`text-xs px-2 py-0.5 rounded ${
-              apt.confidence === "high"
-                ? "bg-emerald-50 text-emerald-700 dark:bg-emerald-900/30 dark:text-emerald-200"
-                : apt.confidence === "medium"
-                ? "bg-amber-50 text-amber-700 dark:bg-amber-900/30 dark:text-amber-200"
-                : "bg-rose-50 text-rose-700 dark:bg-rose-900/30 dark:text-rose-200"
-            }`}
-          >
-            confidence: {apt.confidence}
-          </span>
+          {apt.tags.length > 3 && <Tag>+{apt.tags.length - 3}</Tag>}
         </div>
       </header>
 
       <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-5 gap-2 sm:gap-3">
-        <KpiCard label="Rent" value={fmtMoney(apt.rent)} sub={
-          apt.rentRangeLow !== null && apt.rentRangeHigh !== null
-            ? `${fmtMoney(apt.rentRangeLow)}–${fmtMoney(apt.rentRangeHigh)}`
-            : undefined
-        } />
+        <KpiCard
+          label="Rent"
+          value={fmtMoney(apt.rent)}
+          sub={
+            apt.rentRangeLow !== null && apt.rentRangeHigh !== null
+              ? `${fmtMoney(apt.rentRangeLow)}–${fmtMoney(apt.rentRangeHigh)}`
+              : undefined
+          }
+        />
         <KpiCard label="Est. monthly" value={fmtMoney(total)} />
         <KpiCard label="Move-in" value={fmtMoney(moveIn)} />
         <KpiCard
@@ -121,7 +111,7 @@ export default function ApartmentDetailPage({
               <h2 className="text-base font-semibold">Pros</h2>
               <ul className="list-disc pl-5 text-sm space-y-1">
                 {apt.pros.map((p, i) => (
-                  <li key={i} className="text-emerald-800 dark:text-emerald-200">
+                  <li key={i} className="text-emerald-800">
                     {p}
                   </li>
                 ))}
@@ -133,7 +123,7 @@ export default function ApartmentDetailPage({
               <h2 className="text-base font-semibold">Cons</h2>
               <ul className="list-disc pl-5 text-sm space-y-1">
                 {apt.cons.map((c, i) => (
-                  <li key={i} className="text-rose-800 dark:text-rose-200">
+                  <li key={i} className="text-rose-800">
                     {c}
                   </li>
                 ))}
@@ -149,11 +139,11 @@ export default function ApartmentDetailPage({
         apt.followUpQuestions.length > 0) && (
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-3 sm:gap-4">
           {apt.redFlags.length > 0 && (
-            <Card className="p-4 sm:p-5 space-y-2 bg-rose-50 dark:bg-rose-900/20 border-rose-200 dark:border-rose-900">
+            <Card className="p-4 sm:p-5 space-y-2 bg-rose-50 border-rose-200">
               <h2 className="text-base font-semibold">⚠ Red flags</h2>
               <ul className="list-disc pl-5 text-sm space-y-1">
                 {apt.redFlags.map((c, i) => (
-                  <li key={i} className="text-red-900 dark:text-rose-100">
+                  <li key={i} className="text-red-900">
                     {c}
                   </li>
                 ))}
@@ -161,11 +151,11 @@ export default function ApartmentDetailPage({
             </Card>
           )}
           {apt.dealbreakers.length > 0 && (
-            <Card className="p-4 sm:p-5 space-y-2 bg-red-50 dark:bg-red-900/20 border-red-200 dark:border-red-900">
+            <Card className="p-4 sm:p-5 space-y-2 bg-red-50 border-red-200">
               <h2 className="text-base font-semibold">Dealbreakers</h2>
               <ul className="list-disc pl-5 text-sm space-y-1">
                 {apt.dealbreakers.map((c, i) => (
-                  <li key={i} className="text-red-900 dark:text-red-100 font-medium">
+                  <li key={i} className="text-red-900 font-medium">
                     {c}
                   </li>
                 ))}
@@ -173,11 +163,11 @@ export default function ApartmentDetailPage({
             </Card>
           )}
           {apt.unknowns.length > 0 && (
-            <Card className="p-4 sm:p-5 space-y-2 bg-amber-50 dark:bg-amber-900/20 border-amber-200 dark:border-amber-900">
+            <Card className="p-4 sm:p-5 space-y-2 bg-amber-50 border-amber-200">
               <h2 className="text-base font-semibold">Unknowns</h2>
               <ul className="list-disc pl-5 text-sm space-y-1">
                 {apt.unknowns.map((c, i) => (
-                  <li key={i} className="text-amber-900 dark:text-amber-100">
+                  <li key={i} className="text-amber-900">
                     {c}
                   </li>
                 ))}
@@ -198,7 +188,11 @@ export default function ApartmentDetailPage({
       )}
 
       <Card className="p-2 sm:p-4">
-        <Accordion title="Fees, parking, pets, utilities" defaultOpen alwaysOpenAt="md">
+        <Accordion
+          title="Fees, parking, pets, utilities"
+          defaultOpen
+          alwaysOpenAt="md"
+        >
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-sm">
             <div>
               <div className="text-xs text-[var(--muted)] uppercase mb-1">
@@ -208,12 +202,11 @@ export default function ApartmentDetailPage({
                 <li>Application: {fmtMoney(apt.fees.application)}</li>
                 <li>Admin: {fmtMoney(apt.fees.admin)}</li>
                 <li>Deposit: {fmtMoney(apt.fees.deposit)}</li>
-                <li>Parking: {fmtMoney(apt.fees.parking ?? apt.parking.cost)}</li>
                 <li>Pet deposit: {fmtMoney(apt.fees.petDeposit)}</li>
                 <li>Pet fee: {fmtMoney(apt.fees.petFee)}</li>
                 <li>Pet rent: {fmtMoney(apt.fees.petRent)}</li>
                 {apt.fees.other.map((o, i) => (
-                  <li key={i} className="text-slate-600 dark:text-slate-400">
+                  <li key={i} className="text-slate-600">
                     • {o}
                   </li>
                 ))}
@@ -228,19 +221,17 @@ export default function ApartmentDetailPage({
                 <li>Species: {apt.petPolicy.speciesAllowed || "—"}</li>
                 <li>Max pets: {apt.petPolicy.maxPets ?? "—"}</li>
                 <li>
-                  Weight limit:{" "}
+                  Weight limit:{""}
                   {apt.petPolicy.weightLimit
                     ? `${apt.petPolicy.weightLimit} lb`
                     : "—"}
                 </li>
                 <li>Breeds: {apt.petPolicy.breedRestrictions || "—"}</li>
                 {apt.petPolicy.petAmenities.length > 0 && (
-                  <li>Amenities: {apt.petPolicy.petAmenities.join(", ")}</li>
+                  <li>Amenities: {apt.petPolicy.petAmenities.join(",")}</li>
                 )}
                 {apt.petPolicy.notes && (
-                  <li className="text-slate-600 dark:text-slate-400">
-                    {apt.petPolicy.notes}
-                  </li>
+                  <li className="text-slate-600">{apt.petPolicy.notes}</li>
                 )}
               </ul>
             </div>
@@ -253,9 +244,7 @@ export default function ApartmentDetailPage({
                 <li>Covered: {apt.parking.covered ? "Yes" : "No"}</li>
                 <li>Cost: {fmtMoney(apt.parking.cost)}/mo</li>
                 {apt.parking.notes && (
-                  <li className="text-slate-600 dark:text-slate-400">
-                    {apt.parking.notes}
-                  </li>
+                  <li className="text-slate-600">{apt.parking.notes}</li>
                 )}
               </ul>
             </div>
@@ -265,15 +254,15 @@ export default function ApartmentDetailPage({
               </div>
               <ul className="space-y-0.5">
                 <li>
-                  Included:{" "}
+                  Included:{""}
                   {apt.utilities.included.length
-                    ? apt.utilities.included.join(", ")
+                    ? apt.utilities.included.join(",")
                     : "—"}
                 </li>
                 <li>
-                  Tenant pays:{" "}
+                  Tenant pays:{""}
                   {apt.utilities.tenantPaid.length
-                    ? apt.utilities.tenantPaid.join(", ")
+                    ? apt.utilities.tenantPaid.join(",")
                     : "—"}
                 </li>
                 <li>
@@ -323,12 +312,11 @@ export default function ApartmentDetailPage({
         <Accordion title="Scores" defaultOpen alwaysOpenAt="md">
           <div className="grid grid-cols-2 md:grid-cols-4 gap-2 text-sm">
             {(
-              Object.keys(SCORE_CATEGORY_LABELS) as (keyof typeof SCORE_CATEGORY_LABELS)[]
+              Object.keys(
+                SCORE_CATEGORY_LABELS,
+              ) as (keyof typeof SCORE_CATEGORY_LABELS)[]
             ).map((k) => (
-              <div
-                key={k}
-                className="bg-slate-50 dark:bg-slate-800/60 rounded p-2"
-              >
+              <div key={k} className="bg-slate-50 rounded p-2">
                 <div className="text-xs text-[var(--muted)]">
                   {SCORE_CATEGORY_LABELS[k]}
                 </div>
@@ -353,16 +341,18 @@ export default function ApartmentDetailPage({
         >
           {apt.reviewSummary.rating !== null && (
             <p className="text-sm mb-2">
-              <span className="font-semibold">{apt.reviewSummary.rating}</span> / 5{" "}
+              <span className="font-semibold">{apt.reviewSummary.rating}</span>{" "}
+              / 5{""}
               {apt.reviewSummary.reviewCount &&
-                `from ${apt.reviewSummary.reviewCount} reviews`}{" "}
+                `from ${apt.reviewSummary.reviewCount} reviews`}
+              {""}
               {apt.reviewSummary.source && `• ${apt.reviewSummary.source}`}
             </p>
           )}
           <div className="grid grid-cols-1 md:grid-cols-2 gap-3 text-sm">
             {apt.reviewSummary.commonPraise.length > 0 && (
               <div>
-                <div className="text-xs text-emerald-700 dark:text-emerald-300 uppercase mb-1">
+                <div className="text-xs text-emerald-700 uppercase mb-1">
                   Common praise
                 </div>
                 <ul className="list-disc pl-5 space-y-0.5">
@@ -374,7 +364,7 @@ export default function ApartmentDetailPage({
             )}
             {apt.reviewSummary.commonComplaints.length > 0 && (
               <div>
-                <div className="text-xs text-rose-700 dark:text-rose-300 uppercase mb-1">
+                <div className="text-xs text-rose-700 uppercase mb-1">
                   Common complaints
                 </div>
                 <ul className="list-disc pl-5 space-y-0.5">
@@ -434,11 +424,13 @@ export default function ApartmentDetailPage({
               type="url"
               inputMode="url"
               placeholder="https://…"
+              aria-label="Source URL"
               value={srcUrl}
               onChange={(e) => setSrcUrl(e.target.value)}
             />
             <input
               placeholder="What this source confirms"
+              aria-label="Source notes"
               value={srcNotes}
               onChange={(e) => setSrcNotes(e.target.value)}
             />
@@ -455,7 +447,7 @@ export default function ApartmentDetailPage({
                 setSrcUrl("");
                 setSrcNotes("");
               }}
-              className="px-3 min-h-[44px] rounded bg-slate-900 dark:bg-slate-100 text-white dark:text-slate-900"
+              className="px-3 min-h-[44px] rounded bg-slate-900 text-white"
             >
               Add source
             </button>
@@ -481,11 +473,11 @@ export default function ApartmentDetailPage({
                 .map((c) => (
                   <li
                     key={c.id}
-                    className="border border-slate-200 dark:border-slate-700 rounded p-2 text-sm"
+                    className="border border-slate-200 rounded p-2 text-sm"
                   >
                     <div className="flex items-center justify-between text-xs text-slate-500 mb-1">
                       <span className="font-medium">{c.category}</span>
-                      <span>{new Date(c.createdAt).toLocaleString()}</span>
+                      <ClientTime iso={c.createdAt} />
                     </div>
                     <p className="whitespace-pre-wrap">{c.body}</p>
                     <button
@@ -506,6 +498,7 @@ export default function ApartmentDetailPage({
                 onChange={(e) =>
                   setDraftCat(e.target.value as Comment["category"])
                 }
+                aria-label="Note category"
                 className="!w-auto"
               >
                 <option value="general">general</option>
@@ -520,6 +513,7 @@ export default function ApartmentDetailPage({
                 value={draft}
                 onChange={(e) => setDraft(e.target.value)}
                 placeholder="Add a note…"
+                aria-label="Note body"
               />
             </div>
             <button
@@ -528,49 +522,10 @@ export default function ApartmentDetailPage({
                 addComment(apt.id, draft.trim(), draftCat);
                 setDraft("");
               }}
-              className="self-end px-3 min-h-[44px] rounded bg-slate-900 dark:bg-slate-100 text-white dark:text-slate-900 text-sm"
+              className="self-end px-3 min-h-[44px] rounded bg-slate-900 text-white text-sm"
             >
               Add comment
             </button>
-          </div>
-          {/* Mobile: tap "Add note" in the sticky action bar (handled by Sheet below) */}
-          <button
-            type="button"
-            onClick={() => setNoteSheet(true)}
-            className="md:hidden mt-3 px-3 min-h-[44px] rounded border border-[var(--border)] text-sm w-full"
-          >
-            + Add note
-          </button>
-        </Accordion>
-
-        <Accordion title="Quick status change" alwaysOpenAt="md">
-          <div className="flex flex-wrap gap-2">
-            {(
-              [
-                "Interested",
-                "Strong contender",
-                "Needs research",
-                "Scheduled tour",
-                "Applied",
-                "Rejected",
-                "Archived",
-              ] as const
-            ).map((s) => (
-              <button
-                key={s}
-                onClick={() => upsertApartment({ ...apt, status: s })}
-                className={`px-3 min-h-[44px] rounded text-xs border ${
-                  apt.status === s
-                    ? "bg-slate-900 dark:bg-slate-100 text-white dark:text-slate-900 border-slate-900 dark:border-slate-100"
-                    : "border-slate-300 dark:border-slate-600 bg-[var(--card)]"
-                }`}
-              >
-                {s}
-              </button>
-            ))}
-          </div>
-          <div className="text-xs text-slate-500 mt-3">
-            Last updated {new Date(apt.updatedAt).toLocaleString()}
           </div>
         </Accordion>
       </Card>
@@ -580,7 +535,7 @@ export default function ApartmentDetailPage({
       <StickyActionBar>
         <Link
           href={`/apartments/${apt.id}/edit`}
-          className="flex-1 inline-flex items-center justify-center min-h-[44px] rounded bg-slate-900 dark:bg-slate-100 text-white dark:text-slate-900 text-sm font-medium"
+          className="flex-1 inline-flex items-center justify-center min-h-[44px] rounded bg-slate-900 text-white text-sm font-medium"
         >
           Edit
         </Link>
@@ -630,10 +585,14 @@ export default function ApartmentDetailPage({
       >
         <div className="space-y-3 py-2">
           <label className="block text-sm">
-            <span className="text-xs text-[var(--muted)] block mb-1">Category</span>
+            <span className="text-xs text-[var(--muted)] block mb-1">
+              Category
+            </span>
             <select
               value={draftCat}
-              onChange={(e) => setDraftCat(e.target.value as Comment["category"])}
+              onChange={(e) =>
+                setDraftCat(e.target.value as Comment["category"])
+              }
             >
               <option value="general">general</option>
               <option value="tour">tour</option>
@@ -657,6 +616,14 @@ export default function ApartmentDetailPage({
       </Sheet>
     </div>
   );
+}
+
+function ClientTime({ iso }: { iso: string }) {
+  const [text, setText] = useState("");
+  useEffect(() => {
+    setText(new Date(iso).toLocaleString());
+  }, [iso]);
+  return <span suppressHydrationWarning>{text}</span>;
 }
 
 function KpiCard({

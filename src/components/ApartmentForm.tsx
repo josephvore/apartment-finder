@@ -9,18 +9,11 @@ import {
   SCORE_CATEGORY_LABELS,
 } from "@/lib/types";
 import { useStore } from "@/lib/store";
-import {
-  Accordion,
-  Card,
-  StickyActionBar,
-  StickyActionSpacer,
-} from "./ui";
+import { Accordion, Card, StickyActionBar, StickyActionSpacer } from "./ui";
 import { ListField } from "./ListField";
 
 type NumField =
   | "rent"
-  | "rentRangeLow"
-  | "rentRangeHigh"
   | "squareFeet"
   | "fees.application"
   | "fees.admin"
@@ -92,13 +85,13 @@ export function ApartmentForm({
         <div className="hidden md:flex gap-2 shrink-0">
           <button
             onClick={() => router.back()}
-            className="px-3 min-h-[44px] rounded border border-slate-300 dark:border-slate-600 text-sm"
+            className="px-3 min-h-[44px] rounded border border-slate-300 text-sm"
           >
             Cancel
           </button>
           <button
             onClick={save}
-            className="px-3 min-h-[44px] rounded bg-emerald-600 text-white text-sm hover:bg-emerald-700"
+            className="px-3 min-h-[44px] rounded bg-emerald-700 text-white text-sm hover:bg-emerald-800"
           >
             Save
           </button>
@@ -225,24 +218,6 @@ export function ApartmentForm({
                 onChange={(e) => setNum("rent", e.target.value)}
               />
             </Field>
-            <Field label="Rent low">
-              <input
-                type="number"
-                inputMode="numeric"
-                pattern="[0-9]*"
-                value={numVal("rentRangeLow")}
-                onChange={(e) => setNum("rentRangeLow", e.target.value)}
-              />
-            </Field>
-            <Field label="Rent high">
-              <input
-                type="number"
-                inputMode="numeric"
-                pattern="[0-9]*"
-                value={numVal("rentRangeHigh")}
-                onChange={(e) => setNum("rentRangeHigh", e.target.value)}
-              />
-            </Field>
             <Field label="Application">
               <input
                 type="number"
@@ -364,7 +339,10 @@ export function ApartmentForm({
                 type="checkbox"
                 checked={apt.parking.covered}
                 onChange={(e) =>
-                  update("parking", { ...apt.parking, covered: e.target.checked })
+                  update("parking", {
+                    ...apt.parking,
+                    covered: e.target.checked,
+                  })
                 }
                 className="!w-5 !h-5"
               />
@@ -438,7 +416,10 @@ export function ApartmentForm({
               <input
                 value={apt.petPolicy.notes}
                 onChange={(e) =>
-                  update("petPolicy", { ...apt.petPolicy, notes: e.target.value })
+                  update("petPolicy", {
+                    ...apt.petPolicy,
+                    notes: e.target.value,
+                  })
                 }
               />
             </Field>
@@ -475,49 +456,31 @@ export function ApartmentForm({
               label="Pros"
               values={apt.pros}
               onChange={(v) => update("pros", v)}
-              colorClass="bg-emerald-100 text-emerald-800 dark:bg-emerald-900/40 dark:text-emerald-200"
+              colorClass="bg-emerald-100 text-emerald-800"
             />
             <ListField
               label="Cons"
               values={apt.cons}
               onChange={(v) => update("cons", v)}
-              colorClass="bg-rose-100 text-rose-800 dark:bg-rose-900/40 dark:text-rose-200"
+              colorClass="bg-rose-100 text-rose-800"
             />
             <ListField
               label="Red flags"
               values={apt.redFlags}
               onChange={(v) => update("redFlags", v)}
-              colorClass="bg-red-100 text-red-800 dark:bg-red-900/40 dark:text-red-200"
+              colorClass="bg-red-100 text-red-800"
             />
             <ListField
               label="Unknowns"
               values={apt.unknowns}
               onChange={(v) => update("unknowns", v)}
-              colorClass="bg-amber-100 text-amber-800 dark:bg-amber-900/40 dark:text-amber-200"
+              colorClass="bg-amber-100 text-amber-800"
             />
             <ListField
               label="Dealbreakers"
               values={apt.dealbreakers}
               onChange={(v) => update("dealbreakers", v)}
-              colorClass="bg-red-200 text-red-900 dark:bg-red-900/60 dark:text-red-100"
-            />
-            <ListField
-              label="Nice-to-haves"
-              values={apt.niceToHaves}
-              onChange={(v) => update("niceToHaves", v)}
-              colorClass="bg-blue-100 text-blue-800 dark:bg-blue-900/40 dark:text-blue-200"
-            />
-            <ListField
-              label="Follow-up questions"
-              values={apt.followUpQuestions}
-              onChange={(v) => update("followUpQuestions", v)}
-              colorClass="bg-purple-100 text-purple-800 dark:bg-purple-900/40 dark:text-purple-200"
-            />
-            <ListField
-              label="Missing data"
-              values={apt.missingData}
-              onChange={(v) => update("missingData", v)}
-              colorClass="bg-slate-200 text-slate-700 dark:bg-slate-700 dark:text-slate-200"
+              colorClass="bg-red-200 text-red-900"
             />
           </div>
         </Accordion>
@@ -525,7 +488,9 @@ export function ApartmentForm({
         <Accordion title="Scores (1–10, blank to skip)" alwaysOpenAt="md">
           <div className="grid grid-cols-2 md:grid-cols-4 gap-3 text-sm">
             {(
-              Object.keys(SCORE_CATEGORY_LABELS) as (keyof typeof SCORE_CATEGORY_LABELS)[]
+              Object.keys(
+                SCORE_CATEGORY_LABELS,
+              ) as (keyof typeof SCORE_CATEGORY_LABELS)[]
             ).map((k) => (
               <Field key={k} label={SCORE_CATEGORY_LABELS[k]}>
                 <input
@@ -548,109 +513,8 @@ export function ApartmentForm({
           </div>
         </Accordion>
 
-        <Accordion title="Tour & contact" alwaysOpenAt="md">
-          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-3 text-sm">
-            <label className="flex items-center gap-2 min-h-[44px]">
-              <input
-                type="checkbox"
-                checked={apt.tour.scheduled}
-                onChange={(e) =>
-                  update("tour", { ...apt.tour, scheduled: e.target.checked })
-                }
-                className="!w-5 !h-5"
-              />
-              <span>Tour scheduled</span>
-            </label>
-            <label className="flex items-center gap-2 min-h-[44px]">
-              <input
-                type="checkbox"
-                checked={apt.tour.completed}
-                onChange={(e) =>
-                  update("tour", { ...apt.tour, completed: e.target.checked })
-                }
-                className="!w-5 !h-5"
-              />
-              <span>Tour completed</span>
-            </label>
-            <Field label="Tour date">
-              <input
-                type="date"
-                value={apt.tour.date}
-                onChange={(e) =>
-                  update("tour", { ...apt.tour, date: e.target.value })
-                }
-              />
-            </Field>
-            <Field label="Contact name">
-              <input
-                value={apt.tour.contactName}
-                onChange={(e) =>
-                  update("tour", { ...apt.tour, contactName: e.target.value })
-                }
-                autoComplete="name"
-              />
-            </Field>
-            <Field label="Email">
-              <input
-                type="email"
-                inputMode="email"
-                autoCapitalize="none"
-                autoCorrect="off"
-                value={apt.tour.contactEmail}
-                onChange={(e) =>
-                  update("tour", { ...apt.tour, contactEmail: e.target.value })
-                }
-                autoComplete="email"
-              />
-            </Field>
-            <Field label="Phone">
-              <input
-                type="tel"
-                inputMode="tel"
-                value={apt.tour.contactPhone}
-                onChange={(e) =>
-                  update("tour", { ...apt.tour, contactPhone: e.target.value })
-                }
-                autoComplete="tel"
-              />
-            </Field>
-            <Field label="App deadline">
-              <input
-                type="date"
-                value={apt.tour.applicationDeadline}
-                onChange={(e) =>
-                  update("tour", {
-                    ...apt.tour,
-                    applicationDeadline: e.target.value,
-                  })
-                }
-              />
-            </Field>
-            <Field label="Required documents" className="md:col-span-3">
-              <input
-                value={apt.tour.requiredDocuments}
-                onChange={(e) =>
-                  update("tour", {
-                    ...apt.tour,
-                    requiredDocuments: e.target.value,
-                  })
-                }
-              />
-            </Field>
-            <Field label="Tour notes" className="md:col-span-3">
-              <textarea
-                rows={3}
-                value={apt.tour.notes}
-                onChange={(e) =>
-                  update("tour", { ...apt.tour, notes: e.target.value })
-                }
-              />
-            </Field>
-          </div>
-        </Accordion>
-
-        <Accordion title="Review signals" alwaysOpenAt="md">
-          <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 text-sm">
+        <Accordion title="Review rating" alwaysOpenAt="md">
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 text-sm">
             <Field label="Rating">
               <input
                 type="number"
@@ -661,21 +525,6 @@ export function ApartmentForm({
                   update("reviewSummary", {
                     ...apt.reviewSummary,
                     rating:
-                      e.target.value === "" ? null : Number(e.target.value),
-                  })
-                }
-              />
-            </Field>
-            <Field label="Review count">
-              <input
-                type="number"
-                inputMode="numeric"
-                pattern="[0-9]*"
-                value={apt.reviewSummary.reviewCount ?? ""}
-                onChange={(e) =>
-                  update("reviewSummary", {
-                    ...apt.reviewSummary,
-                    reviewCount:
                       e.target.value === "" ? null : Number(e.target.value),
                   })
                 }
@@ -693,30 +542,6 @@ export function ApartmentForm({
               />
             </Field>
           </div>
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 mt-3">
-            <ListField
-              label="Common praise"
-              values={apt.reviewSummary.commonPraise}
-              onChange={(v) =>
-                update("reviewSummary", {
-                  ...apt.reviewSummary,
-                  commonPraise: v,
-                })
-              }
-              colorClass="bg-emerald-50 text-emerald-700 dark:bg-emerald-900/30 dark:text-emerald-200"
-            />
-            <ListField
-              label="Common complaints"
-              values={apt.reviewSummary.commonComplaints}
-              onChange={(v) =>
-                update("reviewSummary", {
-                  ...apt.reviewSummary,
-                  commonComplaints: v,
-                })
-              }
-              colorClass="bg-rose-50 text-rose-700 dark:bg-rose-900/30 dark:text-rose-200"
-            />
-          </div>
         </Accordion>
       </Card>
 
@@ -725,17 +550,10 @@ export function ApartmentForm({
       <StickyActionBar>
         <button
           type="button"
-          onClick={() => router.back()}
-          className="flex-1 min-h-[44px] rounded border border-[var(--border)] text-sm"
-        >
-          Cancel
-        </button>
-        <button
-          type="button"
           onClick={save}
-          className="flex-[2] min-h-[44px] rounded bg-emerald-600 text-white text-sm font-medium hover:bg-emerald-700"
+          className="flex-1 min-h-[48px] rounded bg-emerald-700 text-white text-sm font-medium hover:bg-emerald-800"
         >
-          Save
+          Save apartment
         </button>
       </StickyActionBar>
     </div>

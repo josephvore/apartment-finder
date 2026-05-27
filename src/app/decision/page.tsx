@@ -13,7 +13,6 @@ import {
   fmtMoney,
 } from "@/components/ui";
 import {
-  bestBy,
   bestValue,
   costPerSqFt,
   highestRisk,
@@ -63,14 +62,12 @@ export default function DecisionPage() {
   const ranked = useMemo(() => rankByScore(apts, weights), [apts, weights]);
   const best = ranked[0]?.apt ?? null;
   const value = useMemo(() => bestValue(apts), [apts]);
-  const location = useMemo(() => bestBy(apts, "location"), [apts]);
-  const amenities = useMemo(() => bestBy(apts, "amenities"), [apts]);
   const risk = useMemo(() => highestRisk(apts), [apts]);
   const needsResearch = apts.filter(
     (a) =>
       a.confidence === "low" ||
       a.unknowns.length >= 3 ||
-      a.missingData.length >= 3
+      a.missingData.length >= 3,
   );
   const eliminate = apts.filter((a) => a.dealbreakers.length > 0);
   const flagged = apts.filter((a) => a.redFlags.length > 0);
@@ -96,7 +93,7 @@ export default function DecisionPage() {
             best
               ? `Top weighted score: ${weightedScore(
                   best.scores,
-                  weights
+                  weights,
                 )?.toFixed(1)}. Strongest balance across your priorities.`
               : ""
           }
@@ -113,46 +110,13 @@ export default function DecisionPage() {
           }
         />
         <Spotlight
-          title="Best location"
-          apt={location}
-          reason={
-            location
-              ? `Highest location score (${location.scores.location}/10). ${location.locationNotes}`
-              : ""
-          }
-        />
-        <Spotlight
-          title="Best amenities"
-          apt={amenities}
-          reason={
-            amenities
-              ? `${amenities.scores.amenities}/10 amenity score. ${amenities.amenities
-                  .slice(0, 5)
-                  .join(", ")}…`
-              : ""
-          }
-        />
-        <Spotlight
           title="Highest risk (most red flags)"
           apt={risk && risk.redFlags.length > 0 ? risk : null}
           reason={
             risk && risk.redFlags.length > 0
               ? `${risk.redFlags.length} flag${
                   risk.redFlags.length > 1 ? "s" : ""
-                }: ${risk.redFlags.slice(0, 2).join("; ")}`
-              : ""
-          }
-        />
-        <Spotlight
-          title="Lowest all-in monthly"
-          apt={
-            [...apts].sort(
-              (a, b) => totalMonthlyCost(a) - totalMonthlyCost(b)
-            )[0] ?? null
-          }
-          reason={
-            apts.length > 0
-              ? `Cheapest estimated all-in monthly cost across your tracked options.`
+                }: ${risk.redFlags.slice(0, 2).join(";")}`
               : ""
           }
         />
@@ -160,32 +124,32 @@ export default function DecisionPage() {
 
       <Card className="p-4 sm:p-5">
         <SectionHeading>Full ranking (weighted)</SectionHeading>
-        <ol className="space-y-1">
+        <ol>
           {ranked.map(({ apt, score }, i) => (
             <li
               key={apt.id}
-              className="flex items-center gap-3 border-b border-slate-100 dark:border-slate-800 last:border-0 py-2"
+              className="border-b border-slate-100 last:border-0"
             >
-              <span className="w-7 text-center text-sm font-bold text-slate-500 shrink-0">
-                {i + 1}
-              </span>
-              <ScorePill score={score} size="sm" />
-              <div className="flex-1 min-w-0">
-                <Link
-                  href={`/apartments/${apt.id}`}
-                  className="font-medium hover:underline truncate block"
-                >
-                  {apt.name}
-                </Link>
-                <div className="text-xs text-[var(--muted)] truncate">
-                  {apt.neighborhood} • {fmtMoney(apt.rent)} •{" "}
-                  {fmtMoney(totalMonthlyCost(apt))} all-in
+              <Link
+                href={`/apartments/${apt.id}`}
+                className="flex items-center gap-3 py-2 min-h-[56px] -mx-2 px-2 rounded hover:bg-slate-50"
+              >
+                <span className="w-7 text-center text-sm font-bold text-slate-500 shrink-0">
+                  {i + 1}
+                </span>
+                <ScorePill score={score} size="sm" />
+                <div className="flex-1 min-w-0">
+                  <div className="font-medium truncate">{apt.name}</div>
+                  <div className="text-xs text-[var(--muted)] truncate">
+                    {apt.neighborhood} • {fmtMoney(apt.rent)} •{""}
+                    {fmtMoney(totalMonthlyCost(apt))} all-in
+                  </div>
                 </div>
-              </div>
-              <div className="hidden sm:flex items-center gap-1.5 shrink-0">
-                <StatusBadge status={apt.status} />
-                <RedFlagBadge count={apt.redFlags.length} />
-              </div>
+                <div className="hidden sm:flex items-center gap-1.5 shrink-0">
+                  <StatusBadge status={apt.status} />
+                  <RedFlagBadge count={apt.redFlags.length} />
+                </div>
+              </Link>
             </li>
           ))}
         </ol>
@@ -207,8 +171,8 @@ export default function DecisionPage() {
                     {a.name}
                   </Link>
                   <span className="text-xs text-slate-500">
-                    {" "}
-                    — {a.confidence} confidence, {a.unknowns.length} unknowns,{" "}
+                    {""}— {a.confidence} confidence, {a.unknowns.length}{" "}
+                    unknowns,{""}
                     {a.missingData.length} missing fields
                   </span>
                 </li>
@@ -230,9 +194,8 @@ export default function DecisionPage() {
                   >
                     {a.name}
                   </Link>
-                  <span className="text-xs text-rose-700 dark:text-rose-300">
-                    {" "}
-                    — {a.dealbreakers.join("; ")}
+                  <span className="text-xs text-rose-700">
+                    {""}— {a.dealbreakers.join(";")}
                   </span>
                 </li>
               ))}
@@ -242,11 +205,11 @@ export default function DecisionPage() {
       </div>
 
       {flagged.length > 0 && (
-        <Card className="p-2 sm:p-4 bg-rose-50 dark:bg-rose-900/20 border-rose-200 dark:border-rose-900">
+        <Card className="p-2 sm:p-4 bg-rose-50 border-rose-200">
           <Accordion
             title="Biggest red flags"
             badge={
-              <span className="text-xs text-rose-700 dark:text-rose-300 font-medium">
+              <span className="text-xs text-rose-700 font-medium">
                 {flagged.length} apartment{flagged.length === 1 ? "" : "s"}
               </span>
             }
@@ -261,7 +224,7 @@ export default function DecisionPage() {
                   >
                     {a.name}
                   </Link>
-                  <ul className="list-disc pl-5 text-xs text-red-900 dark:text-rose-100">
+                  <ul className="list-disc pl-5 text-xs text-red-900">
                     {a.redFlags.map((r, i) => (
                       <li key={i}>{r}</li>
                     ))}

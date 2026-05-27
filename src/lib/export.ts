@@ -61,7 +61,7 @@ export function apartmentsToCSV(apartments: Apartment[]): string {
         a.confidence,
       ]
         .map(ESCAPE)
-        .join(",")
+        .join(","),
     );
   }
   return lines.join("\n");
@@ -108,17 +108,18 @@ export function toGoogleDocsRows(apartments: Apartment[]): GoogleDocsRow[] {
       squareFeet: a.squareFeet ? a.squareFeet.toString() : "—",
       availability: a.availability || "—",
       leaseTerms: a.leaseTerms || "—",
-      fees: [
-        a.fees.application !== null && `App $${a.fees.application}`,
-        a.fees.admin !== null && `Admin $${a.fees.admin}`,
-        a.fees.deposit !== null && `Deposit $${a.fees.deposit}`,
-        a.fees.petDeposit !== null && `Pet dep $${a.fees.petDeposit}`,
-        a.fees.petFee !== null && `Pet fee $${a.fees.petFee}`,
-        a.fees.petRent !== null && `Pet rent $${a.fees.petRent}/mo`,
-        ...a.fees.other,
-      ]
-        .filter(Boolean)
-        .join("; ") || "—",
+      fees:
+        [
+          a.fees.application !== null && `App $${a.fees.application}`,
+          a.fees.admin !== null && `Admin $${a.fees.admin}`,
+          a.fees.deposit !== null && `Deposit $${a.fees.deposit}`,
+          a.fees.petDeposit !== null && `Pet dep $${a.fees.petDeposit}`,
+          a.fees.petFee !== null && `Pet fee $${a.fees.petFee}`,
+          a.fees.petRent !== null && `Pet rent $${a.fees.petRent}/mo`,
+          ...a.fees.other,
+        ]
+          .filter(Boolean)
+          .join("; ") || "—",
       utilities:
         [
           a.utilities.included.length &&
@@ -159,8 +160,8 @@ export function toGoogleDocsRows(apartments: Apartment[]): GoogleDocsRow[] {
         a.tags.length > 0
           ? a.tags.join(", ")
           : a.status === "Strong contender"
-          ? "Top contender"
-          : "Worth tracking",
+            ? "Top contender"
+            : "Worth tracking",
       recommendation: a.pros[0] ?? "",
       sourceLinks: a.sources.map((s) => s.url).join(" | "),
     }));
@@ -193,7 +194,7 @@ export function googleDocsRowsToHTML(rows: GoogleDocsRow[]): string {
   const head = headers
     .map(
       (h) =>
-        `<th style="border:1px solid #999;padding:6px;background:#f1f5f9;text-align:left;">${h.label}</th>`
+        `<th style="border:1px solid #999;padding:6px;background:#f1f5f9;text-align:left;">${h.label}</th>`,
     )
     .join("");
   const body = rows
@@ -203,10 +204,10 @@ export function googleDocsRowsToHTML(rows: GoogleDocsRow[]): string {
           .map(
             (h) =>
               `<td style="border:1px solid #999;padding:6px;vertical-align:top;">${escapeHTML(
-                String(r[h.key] ?? "")
-              )}</td>`
+                String(r[h.key] ?? ""),
+              )}</td>`,
           )
-          .join("")}</tr>`
+          .join("")}</tr>`,
     )
     .join("");
 
@@ -214,10 +215,7 @@ export function googleDocsRowsToHTML(rows: GoogleDocsRow[]): string {
 }
 
 function escapeHTML(s: string): string {
-  return s
-    .replace(/&/g, "&amp;")
-    .replace(/</g, "&lt;")
-    .replace(/>/g, "&gt;");
+  return s.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
 }
 
 export async function copyHTMLToClipboard(html: string, plain: string) {

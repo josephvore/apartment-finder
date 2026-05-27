@@ -59,7 +59,12 @@ function DecisionIcon({ className = "w-6 h-6" }: IconProps) {
 }
 function MoreIcon({ className = "w-6 h-6" }: IconProps) {
   return (
-    <svg viewBox="0 0 24 24" fill="currentColor" className={className} aria-hidden>
+    <svg
+      viewBox="0 0 24 24"
+      fill="currentColor"
+      className={className}
+      aria-hidden
+    >
       <circle cx="5" cy="12" r="1.6" />
       <circle cx="12" cy="12" r="1.6" />
       <circle cx="19" cy="12" r="1.6" />
@@ -195,7 +200,10 @@ export function NavBar() {
       {/* Desktop / tablet top bar */}
       <nav className="no-print hidden md:block border-b border-[var(--border)] bg-[var(--card)] sticky top-0 z-30">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 flex items-center justify-between h-14">
-          <Link href="/" className="flex items-center gap-2 font-semibold">
+          <Link
+            href="/"
+            className="flex items-center gap-2 font-semibold min-h-[44px]"
+          >
             <span className="inline-block w-7 h-7 rounded-md bg-[var(--accent)] text-white grid place-items-center text-xs">
               AF
             </span>
@@ -208,10 +216,11 @@ export function NavBar() {
                 <Link
                   key={l.href}
                   href={l.href}
+                  aria-current={active ? "page" : undefined}
                   className={`px-3 py-1.5 rounded-md text-sm transition-colors ${
                     active
                       ? "bg-[var(--accent)] text-white"
-                      : "hover:bg-slate-100 dark:hover:bg-slate-800 text-slate-700 dark:text-slate-200"
+                      : "hover:bg-slate-100 text-slate-700"
                   }`}
                 >
                   {l.label}
@@ -220,7 +229,7 @@ export function NavBar() {
             })}
             <Link
               href="/apartments/new"
-              className="ml-2 px-3 py-1.5 rounded-md bg-emerald-600 text-white text-sm hover:bg-emerald-700"
+              className="ml-2 px-3 py-1.5 rounded-md bg-emerald-700 text-white text-sm hover:bg-emerald-800"
             >
               + Add Apartment
             </Link>
@@ -234,7 +243,10 @@ export function NavBar() {
         aria-label="Top"
       >
         <div className="flex items-center justify-between h-12 px-4">
-          <Link href="/" className="flex items-center gap-2 font-semibold">
+          <Link
+            href="/"
+            className="flex items-center gap-2 font-semibold min-h-[44px]"
+          >
             <span className="inline-block w-7 h-7 rounded-md bg-[var(--accent)] text-white grid place-items-center text-xs">
               AF
             </span>
@@ -253,7 +265,12 @@ export function NavBar() {
         aria-label="Primary"
       >
         <ul className="grid grid-cols-5 h-[var(--bottom-nav-h)]">
-          <TabLink href="/" label="Home" active={isActive(pathname, "/")} Icon={HomeIcon} />
+          <TabLink
+            href="/"
+            label="Home"
+            active={isActive(pathname, "/")}
+            Icon={HomeIcon}
+          />
           <TabLink
             href="/compare"
             label="Compare"
@@ -285,7 +302,7 @@ export function NavBar() {
               className={`w-full h-full flex flex-col items-center justify-center gap-0.5 text-[11px] ${
                 moreActive
                   ? "text-[var(--accent)] font-medium"
-                  : "text-slate-500 dark:text-slate-400"
+                  : "text-slate-500"
               }`}
             >
               <MoreIcon />
@@ -295,7 +312,7 @@ export function NavBar() {
         </ul>
       </nav>
 
-      {/* Mobile "More" bottom sheet */}
+      {/* Mobile"More"bottom sheet */}
       {moreOpen && (
         <div
           className="md:hidden fixed inset-0 z-50"
@@ -314,7 +331,7 @@ export function NavBar() {
             style={{ paddingBottom: "var(--safe-bottom)" }}
           >
             <div className="flex justify-center pt-2">
-              <span className="w-10 h-1.5 rounded-full bg-slate-300 dark:bg-slate-700" />
+              <span className="w-10 h-1.5 rounded-full bg-slate-300" />
             </div>
             <ul className="p-2">
               {moreLinks.map(({ href, label, icon: Icon }) => {
@@ -326,7 +343,7 @@ export function NavBar() {
                       className={`flex items-center gap-3 px-4 py-3 rounded-lg text-base min-h-[48px] ${
                         active
                           ? "bg-[var(--accent)]/10 text-[var(--accent)] font-medium"
-                          : "text-[var(--foreground)] hover:bg-slate-100 dark:hover:bg-slate-800"
+                          : "text-[var(--foreground)] hover:bg-slate-100"
                       }`}
                       onClick={() => setMoreOpen(false)}
                     >
@@ -359,10 +376,9 @@ function TabLink({
     <li>
       <Link
         href={href}
+        aria-current={active ? "page" : undefined}
         className={`w-full h-full flex flex-col items-center justify-center gap-0.5 text-[11px] ${
-          active
-            ? "text-[var(--accent)] font-medium"
-            : "text-slate-500 dark:text-slate-400"
+          active ? "text-[var(--accent)] font-medium" : "text-slate-500"
         }`}
       >
         <Icon />

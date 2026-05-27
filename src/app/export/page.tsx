@@ -14,7 +14,7 @@ import { PdfReport } from "@/components/PdfReport";
 
 const PDFDownloadLink = dynamic(
   () => import("@react-pdf/renderer").then((m) => m.PDFDownloadLink),
-  { ssr: false }
+  { ssr: false },
 );
 
 export default function ExportPage() {
@@ -31,7 +31,7 @@ export default function ExportPage() {
 
   const rows = useMemo(
     () => toGoogleDocsRows(state.apartments),
-    [state.apartments]
+    [state.apartments],
   );
   const html = useMemo(() => googleDocsRowsToHTML(rows), [rows]);
   const plain = useMemo(
@@ -48,10 +48,10 @@ export default function ExportPage() {
             r.pros,
             r.cons,
             r.redFlags,
-          ].join("\t")
+          ].join("\t"),
         ),
       ].join("\n"),
-    [rows]
+    [rows],
   );
 
   if (!ready)
@@ -95,7 +95,7 @@ export default function ExportPage() {
               />
             }
             fileName={`apartment-report-${today}.pdf`}
-            className="inline-flex items-center justify-center min-h-[48px] px-4 rounded bg-emerald-600 text-white text-sm font-medium hover:bg-emerald-700 active:bg-emerald-800 disabled:opacity-60 w-full sm:w-auto"
+            className="inline-flex items-center justify-center min-h-[48px] px-4 rounded bg-emerald-700 text-white text-sm font-medium hover:bg-emerald-800 active:bg-emerald-900 disabled:opacity-60 w-full sm:w-auto"
           >
             {({ loading }) =>
               loading ? "Preparing PDF…" : "Download PDF report"
@@ -111,8 +111,8 @@ export default function ExportPage() {
               <span
                 className={`text-xs ${
                   copyStatus.startsWith("Copied")
-                    ? "text-emerald-700 dark:text-emerald-300"
-                    : "text-rose-700 dark:text-rose-300"
+                    ? "text-emerald-700"
+                    : "text-rose-700"
                 }`}
               >
                 {copyStatus}
@@ -134,11 +134,11 @@ export default function ExportPage() {
                 setCopyStatus("Copied to clipboard.");
               } catch (e) {
                 setCopyStatus(
-                  e instanceof Error ? `Failed: ${e.message}` : "Copy failed"
+                  e instanceof Error ? `Failed: ${e.message}` : "Copy failed",
                 );
               }
             }}
-            className="min-h-[44px] px-3 rounded bg-slate-900 dark:bg-slate-100 text-white dark:text-slate-900 text-sm font-medium"
+            className="min-h-[44px] px-3 rounded bg-slate-900 text-white text-sm font-medium"
           >
             Copy table to clipboard
           </button>
@@ -151,7 +151,7 @@ export default function ExportPage() {
         </div>
         {showPreview && (
           <div
-            className="border border-slate-200 dark:border-slate-700 rounded p-2 overflow-x-auto bg-white text-slate-900"
+            className="border border-slate-200 rounded p-2 overflow-x-auto bg-white text-slate-900"
             dangerouslySetInnerHTML={{ __html: html }}
           />
         )}
@@ -165,10 +165,10 @@ export default function ExportPage() {
               download(
                 `apartments-${today}.csv`,
                 apartmentsToCSV(state.apartments),
-                "text/csv"
+                "text/csv",
               )
             }
-            className="min-h-[44px] px-3 rounded bg-slate-900 dark:bg-slate-100 text-white dark:text-slate-900 text-sm font-medium"
+            className="min-h-[44px] px-3 rounded bg-slate-900 text-white text-sm font-medium"
           >
             Download CSV
           </button>
@@ -177,10 +177,10 @@ export default function ExportPage() {
               download(
                 `apartments-${today}.json`,
                 exportJSON(),
-                "application/json"
+                "application/json",
               )
             }
-            className="min-h-[44px] px-3 rounded bg-slate-900 dark:bg-slate-100 text-white dark:text-slate-900 text-sm font-medium"
+            className="min-h-[44px] px-3 rounded bg-slate-900 text-white text-sm font-medium"
           >
             Download JSON
           </button>
