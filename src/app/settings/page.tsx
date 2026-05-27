@@ -25,34 +25,38 @@ export default function SettingsPage() {
     setLocalWeights((w) => ({ ...w, [k]: v }));
 
   return (
-    <div className="space-y-6">
-      <h1 className="text-2xl font-bold">Settings</h1>
+    <div className="space-y-4 sm:space-y-6">
+      <h1 className="text-2xl sm:text-3xl font-bold">Settings</h1>
 
-      <Card className="p-5 space-y-4">
+      <Card className="p-4 sm:p-5 space-y-4">
         <SectionHeading
           right={
             <span
               className={`text-xs ${
-                total === 100 ? "text-emerald-700" : "text-amber-700"
+                total === 100
+                  ? "text-emerald-700 dark:text-emerald-300"
+                  : "text-amber-700 dark:text-amber-300"
               }`}
             >
               total: {total}{" "}
-              {total !== 100 && "(weights are normalized when applied)"}
+              {total !== 100 && "(normalized when applied)"}
             </span>
           }
         >
           Scoring weights
         </SectionHeading>
         <p className="text-xs text-[var(--muted)]">
-          Adjust how much each category contributes to the overall score. Sliders
-          run 0–40; total need not equal 100.
+          Adjust how much each category contributes to the overall score.
+          Sliders run 0–40; total need not equal 100.
         </p>
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
           {(Object.keys(weights) as (keyof ScoreWeights)[]).map((k) => (
             <div key={k} className="space-y-1">
               <div className="flex items-center justify-between text-sm">
                 <span className="font-medium">{SCORE_CATEGORY_LABELS[k]}</span>
-                <span className="text-[var(--muted)]">{weights[k]}</span>
+                <span className="text-[var(--muted)] tabular-nums">
+                  {weights[k]}
+                </span>
               </div>
               <input
                 type="range"
@@ -61,14 +65,15 @@ export default function SettingsPage() {
                 value={weights[k]}
                 onChange={(e) => setW(k, parseInt(e.target.value, 10))}
                 className="w-full"
+                aria-label={`${SCORE_CATEGORY_LABELS[k]} weight`}
               />
             </div>
           ))}
         </div>
-        <div className="flex gap-2">
+        <div className="flex flex-col sm:flex-row gap-2">
           <button
             onClick={() => updateWeights(weights)}
-            className="px-3 py-1.5 rounded bg-emerald-600 text-white text-sm"
+            className="min-h-[44px] px-3 rounded bg-emerald-600 text-white text-sm font-medium hover:bg-emerald-700"
           >
             Apply weights
           </button>
@@ -77,21 +82,21 @@ export default function SettingsPage() {
               setLocalWeights(DEFAULT_WEIGHTS);
               updateWeights(DEFAULT_WEIGHTS);
             }}
-            className="px-3 py-1.5 rounded border border-slate-300 text-sm"
+            className="min-h-[44px] px-3 rounded border border-[var(--border)] text-sm"
           >
             Reset to defaults
           </button>
         </div>
       </Card>
 
-      <Card className="p-5 space-y-3">
+      <Card className="p-4 sm:p-5 space-y-3">
         <SectionHeading>Data backup &amp; restore</SectionHeading>
         <p className="text-xs text-[var(--muted)]">
           Persistence: browser localStorage (key{" "}
-          <code>apartment-finder:v1</code>). Use export/import to back up or
-          sync between devices.
+          <code className="break-all">apartment-finder:v1</code>). Use
+          export/import to back up or sync between devices.
         </p>
-        <div className="flex flex-wrap gap-2">
+        <div className="flex flex-col sm:flex-row flex-wrap gap-2">
           <button
             onClick={() => {
               const json = exportJSON();
@@ -105,7 +110,7 @@ export default function SettingsPage() {
               a.click();
               URL.revokeObjectURL(url);
             }}
-            className="px-3 py-1.5 rounded bg-slate-900 text-white text-sm"
+            className="min-h-[44px] px-3 rounded bg-slate-900 dark:bg-slate-100 text-white dark:text-slate-900 text-sm font-medium"
           >
             Download backup JSON
           </button>
@@ -118,7 +123,7 @@ export default function SettingsPage() {
               )
                 resetToSeed();
             }}
-            className="px-3 py-1.5 rounded border border-rose-300 text-rose-700 text-sm"
+            className="min-h-[44px] px-3 rounded border border-rose-300 dark:border-rose-700 text-rose-700 dark:text-rose-300 text-sm"
           >
             Reset to seeded data
           </button>
@@ -142,7 +147,7 @@ export default function SettingsPage() {
                 );
                 if (res.ok) setImportText("");
               }}
-              className="px-3 py-1.5 rounded bg-slate-900 text-white text-sm"
+              className="min-h-[44px] px-3 rounded bg-slate-900 dark:bg-slate-100 text-white dark:text-slate-900 text-sm font-medium"
             >
               Import
             </button>
@@ -150,8 +155,8 @@ export default function SettingsPage() {
               <span
                 className={`text-xs ${
                   importStatus.startsWith("Imported")
-                    ? "text-emerald-700"
-                    : "text-rose-700"
+                    ? "text-emerald-700 dark:text-emerald-300"
+                    : "text-rose-700 dark:text-rose-300"
                 }`}
               >
                 {importStatus}
